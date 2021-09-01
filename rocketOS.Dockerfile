@@ -200,10 +200,10 @@ ENTRYPOINT ["/entrypoint.sh", "build", "/rocketOS.pkr.hcl"]
 # To build:
 # docker build . -f rocketOS.Dockerfile -t rocketos --build-arg RPI_VERSION=4
 # -f rocketOS.Dockerfile                * Specify to build this Docker file
-# --build-arg RPI_VERSION=4             * Which RPI to build image for (3 or 4)
+# --build-arg RPI_VERSION=4             * Which RPI to build image for (3 or 4) UNTESTED!!!
 
 # To run:
-# docker run --rm --privileged -v /dev:/dev -v ${PWD}:/build -v ${PWD}:/rocketOS.pkr.hcl -i rocketOS:latest
+# docker run --rm --privileged -v /dev:/dev -v ${PWD}:/build -v ${PWD}:/rocketOS.pkr.hcl -i rocketos:latest
 # --rm                                  * Remove the container if it exists
 # --privileged                          * This container needs elevated privledges to run
 # -v /dev:/dev                          * Bind mount host OS device volume (needed for /dev/loop to mount virtual devices)
@@ -213,6 +213,6 @@ ENTRYPOINT ["/entrypoint.sh", "build", "/rocketOS.pkr.hcl"]
 # build file.pkr.hcl                    * OPTIONAL: append to run command to overide entrypoint arguments
 
 # To run overiding the entrypoint (run container without task to allow inspection):
-# docker run -i --entrypoint=/bin/bash rocketOS:latest
+# docker run -i --entrypoint=/bin/bash rocketos:latest
 # -i                                    * Allow interactive run
 # --entrypoint=/bin/bash                * Start a bash session as entrypoint
