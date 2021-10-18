@@ -17,9 +17,3 @@ Configuration flags:
 `-e PKR_VAR_password=`
 
 `-e PKR_VAR_hostname=`
-
-`-e PKR_VAR_ip=`
-
-`-e PKR_VAR_netmask=`
-
-`-e PKR_VAR_gateway=`

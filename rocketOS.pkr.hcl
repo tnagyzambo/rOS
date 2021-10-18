@@ -13,21 +13,6 @@ variable "hostname" {
   default = "rocketOS"
 }
 
-variable "ip" {
-  type    = string
-  default = "10.0.0.130"
-}
-
-variable "netmask" {
-  type    = string
-  default = "255.255.255.0"
-}
-
-variable "gateway" {
-  type    = string
-  default = "192.168.178.1"
-}
-
 source "arm" "ubuntu" {
     file_urls = ["http://cdimage.ubuntu.com/releases/20.04.2/release/ubuntu-20.04.2-preinstalled-server-arm64+raspi.img.xz"]
     file_checksum_url = "http://cdimage.ubuntu.com/releases/20.04.2/release/SHA256SUMS"
@@ -97,10 +82,11 @@ build {
             # Actually provision the system
             "sudo DEBIAN_FRONTEND=noninteractive apt-get update",
             "sudo DEBIAN_FRONTEND=noninteractive apt-get install -qy openssh-server rt-tests cpufrequtils",
+            # Configure DCHP client 
+            "sudo echo 'auto eth0' >> /etc/network/interfaces",
+            "sudo echo 'iface eth0 inet DHCP' >> /etc/network/interfaces",
             # Start SSH server on boot
             "sudo systemctl enable ssh",
-            # Configure static IP address
-            "sudo echo -e 'iface eth0 inet static\naddress ${var.ip}\nnetmask ${var.netmask}\ngateway ${var.gateway}' > /etc/network/interfaces",
             # Setup firstboot service
             "sudo chmod +x /firstboot.sh",
             "sudo systemctl enable firstboot.service",
