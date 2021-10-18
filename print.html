@@ -76,7 +76,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="rocketOS.html">rocketOS</a></li><li class="chapter-item expanded "><a href="build.html"><strong aria-hidden="true">1.</strong> Build Instructions</a></li><li class="chapter-item expanded "><a href="ttols/tools.html"><strong aria-hidden="true">2.</strong> Tools</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="tools/docker.html"><strong aria-hidden="true">2.1.</strong> Docker</a></li><li class="chapter-item expanded "><a href="tools/packer.html"><strong aria-hidden="true">2.2.</strong> Packer</a></li><li class="chapter-item expanded "><a href="tools/qemu.html"><strong aria-hidden="true">2.3.</strong> QEMU</a></li><li class="chapter-item expanded "><a href="tools/systemctl.html"><strong aria-hidden="true">2.4.</strong> systemctl</a></li></ol></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="rocketOS.html">rocketOS</a></li><li class="chapter-item expanded "><a href="build.html"><strong aria-hidden="true">1.</strong> Build Instructions</a></li><li class="chapter-item expanded "><a href="tools/tools.html"><strong aria-hidden="true">2.</strong> Tools</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="tools/docker.html"><strong aria-hidden="true">2.1.</strong> Docker</a></li><li class="chapter-item expanded "><a href="tools/packer.html"><strong aria-hidden="true">2.2.</strong> Packer</a></li><li class="chapter-item expanded "><a href="tools/qemu.html"><strong aria-hidden="true">2.3.</strong> QEMU</a></li><li class="chapter-item expanded "><a href="tools/systemctl.html"><strong aria-hidden="true">2.4.</strong> systemctl</a></li></ol></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -174,6 +174,7 @@
 <p>The Docker container can be started and left running until <code>exit</code> with the command:</p>
 <p><code>docker run -i --entrypoint=/bin/bash rocketOS:latest</code></p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="tools"><a class="header" href="#tools">Tools</a></h1>
+<p>A brief description of the tools used in this project is provided in case you would like to onboard yourself to make changes or contributions. This is intended as a first introduction to these tools for those unfamiliar with them.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="docker"><a class="header" href="#docker">Docker</a></h1>
 <p><strong>Docker</strong> provides a virtual environment to build and run applications. By expressing all the build dependencies and steps required to build your software in a <code>.Dockerfile</code>, your build process becomes completely automated and portable. Other developers can compile your software with a <code>docker build</code> command as opposed to manually installing all the dependencies and executing the build commands themselves. Docker containers can also be run with <code>docker run</code> to execute some process or provide some software service.</p>
 <p>This project performs the following during <code>docker build</code></p>
