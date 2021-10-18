@@ -2,7 +2,7 @@
 
 [rocketOS](rocketOS.md)
 - [Build Instructions](build.md)
-- [Tools](ttols/tools.md)
+- [Tools](tools/tools.md)
     - [Docker](tools/docker.md)
     - [Packer](tools/packer.md)
     - [QEMU](tools/qemu.md)
