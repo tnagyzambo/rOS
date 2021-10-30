@@ -21,7 +21,7 @@ sleep 15s
 
 # Inital setup of influx
 # REFERENCE: https://docs.influxdata.com/influxdb/v2.0/reference/cli/influx/setup/#flags
-export CREDENTIALS_FILE="/rocketDATA/influx/credentials.toml"
+export CREDENTIALS_FILE="/home/ros/rocketDATA/influx/credentials.toml"
 export INFLUX_USER=$(grep -oP '(?<=user = ")([^\s]+)(?<!")' ${CREDENTIALS_FILE})
 export INFLUX_PASSWORD=$(grep -oP '(?<=password = ")([^\s]+)(?<!")' ${CREDENTIALS_FILE})
 export INFLUX_ORG=$(grep -oP '(?<=org = ")([^\s]+)(?<!")' ${CREDENTIALS_FILE})

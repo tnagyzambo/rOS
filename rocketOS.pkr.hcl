@@ -114,22 +114,21 @@ build {
             "sudo wget https://dl.influxdata.com/influxdb/releases/${var.influx_release}",
             "sudo dpkg -i ${var.influx_release}",
             "sudo rm ${var.influx_release}",
-            "sudo mkdir /rocketDATA",
-            "sudo mkdir /rocketDATA/influx",
-            "sudo chown -R ${var.user}:sudo /rocketDATA",
+            "sudo mkdir /home/ros/rocketDATA",
+            "sudo mkdir /home/ros/rocketDATA/influx",
         ]
         pause_before = "30s"
     }
     provisioner "file" {
         # Pull influx credentials file
         source = "/build/resources/influx/credentials.toml"
-        destination = "/rocketDATA/influx/"
+        destination = "/home/ros/rocketDATA/influx/"
         pause_before = "5s"
     }
     provisioner "file" {
         # Pull influx config file
         source = "/build/resources/influx/config.toml"
-        destination = "/rocketDATA/influx/"
+        destination = "/home/ros/rocketDATA/influx/"
         pause_before = "5s"
     }
 }
