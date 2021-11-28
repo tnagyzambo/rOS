@@ -3,12 +3,22 @@
 # Apply real-time patch
 # This must be done on the physical hardware
 dpkg -i /rt-deb/*.deb
+rm -rf /rt-deb
+flash-kernel --force 5.4.83-rt51-v8-raspi
 
 # Delete default user
 userdel -r ubuntu
 
 # Set hostname
 hostnamectl set-hostname DEFAULT_HOSTNAME
+
+# Replace old 'hostname' file
+rm /etc/hostname
+echo 'DEFAULT_HOSTNAME' >> /etc/hostname
+
+# Append new hostname to first line of 'hosts' file
+# Result should be '127.0.0.1 localhost DEFAULT_HOSTNAME'
+sed -i '1!b;s/$/\ DEFAULT_HOSTNAME/g' /etc/hosts
 
 # Start influxdb service
 service influxdb start
@@ -38,6 +48,4 @@ sed -i -E "s/$(grep -oP '(token = [^\s]+")' ${CREDENTIALS_FILE})/token = \"${INF
 # Deregister firstboot service and clean up
 systemctl disable firstboot.service
 rm -rf /etc/systemd/system/firstboot.service
-rm -f /firstboot.sh
-rm -rf /rt-deb
-reboot
+rm -f /firstboot.sh ; reboot

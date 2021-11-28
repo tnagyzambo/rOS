@@ -71,8 +71,6 @@ build {
     }
     provisioner "shell" {
         inline = [
-            # Fix hostname issue
-            "sudo echo -e '127.0.0.1       localhost localhost.localdomain ubuntu\n$(cat input)' > /etc/hosts",
             # Fix some weird permision issue regarding /dev/null
             "rm /dev/null",
             "mknod /dev/null c 1 3",
@@ -116,6 +114,9 @@ build {
             "sudo rm ${var.influx_release}",
             "sudo mkdir /home/ros/rocketDATA",
             "sudo mkdir /home/ros/rocketDATA/influx",
+            # rocketGPIO
+            "sudo DEBIAN_FRONTEND=noninteractive apt-get install -qy gpiod",
+            "sudo mkdir /home/ros/rocketGPIO",
         ]
         pause_before = "30s"
     }

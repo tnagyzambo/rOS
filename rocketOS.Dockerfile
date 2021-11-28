@@ -90,7 +90,7 @@ FROM config AS compile
 WORKDIR /linux
 
 # Compile and package kernel
-RUN make -j $(nproc) KBUILD_IMAGE=arch/arm64/boot/Image ARCH=${ARCH} CROSS_COMPILE=${TRIPLE}- deb-pkg
+RUN make -j $(nproc) KBUILD_IMAGE=arch/arm64/boot/Image ARCH=${ARCH} CROSS_COMPILE=${TRIPLE}- LOCALVERSION=-raspi KDEB_PKGVERSION=$(make kernelversion)-1 deb-pkg 
 RUN mkdir /rt-deb
 RUN mv /*.deb /rt-deb/
 
