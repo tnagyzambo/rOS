@@ -1,0 +1,4 @@
+[http]
+enabled = true
+bind-address = ":8086"
+auth-enabled = true
