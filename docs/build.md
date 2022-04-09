@@ -46,12 +46,6 @@ Configurations can be made to your rocketOS image during the `docker run` step. 
 
 `-e PKR_VAR_hostname=`
 
-`-e PKR_VAR_ip=`
-
-`-e PKR_VAR_netmask=`
-
-`-e PKR_VAR_gateway=`
-
 ## Debugging the Docker Container
 
 The Docker container can be started and left running until `exit` with the command:
