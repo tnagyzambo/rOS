@@ -10,7 +10,7 @@ variable "password" {
 
 variable "hostname" {
     type    = string
-    default = "rocketOS"
+    default = "rOS"
 }
 
 variable "influx_release" {
@@ -25,7 +25,7 @@ source "arm" "ubuntu" {
     file_target_extension = "xz"
     file_unarchive_cmd = ["xz", "--decompress", "$ARCHIVE_PATH"]
     image_build_method = "resize"
-    image_path = "rocketOS-20.04.img"
+    image_path = "rOS-20.04.img"
     image_size = "6G"
     image_type = "dos"
     image_partitions {

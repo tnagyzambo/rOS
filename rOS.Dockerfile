@@ -191,7 +191,7 @@ COPY --from=builder /build/packer-builder-arm /bin/packer /bin/
 COPY --from=binfmt /usr/bin/ /usr/bin
 
 # Set entrypoint in to container
-ENTRYPOINT ["/entrypoint.sh", "build", "/rocketOS.pkr.hcl"]
+ENTRYPOINT ["/entrypoint.sh", "build", "/rOS.pkr.hcl"]
 
 ###########################################################################
 #                               Instructions                              #

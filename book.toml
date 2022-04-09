@@ -1,6 +1,6 @@
 [book]
-title = "rocketOS"
+title = "rOS"
 authors = ["Thomas Nagy Zambo"]
-description = "Documentation of rocketOS along with a brief description of technologies used."
+description = "Documentation of rOS along with a brief description of technologies used."
 src = "docs"
 language = "en"
