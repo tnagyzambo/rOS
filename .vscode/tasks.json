@@ -1,0 +1,54 @@
+
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "r_os-docker-build",
+            "type": "shell",
+            "command": "docker",
+            "args": [
+                "build", ".",
+                "-f", "rOS.Dockerfile",
+                "-t", "r_os",
+                "--build-arg", "RPI_VERSION=4",
+            ],
+        },
+        {
+            "label": "r_os-packer-build",
+            "type": "shell",
+            "command": "docker",
+            "args": [
+                "run",
+                "--rm", 
+                "--privileged", 
+                "-v", "/dev:/dev", 
+                "-v", "${PWD}:/build",
+                "-v", "${PWD}:/rOS.pkr.hcl",
+                "-e", "PKR_VAR_user=${input:user}",
+                "-e", "PKR_VAR_password=${input:password}",
+                "-e", "PKR_VAR_hostname=${input:hostname}",
+                "-i", "r_os:latest",
+            ],
+        },
+    ],
+    "inputs": [
+        {
+            "id": "user",
+            "description": "rOS Username",
+            "type": "promptString",
+            "default": "ros",
+        },
+        {
+            "id": "password",
+            "description": "rOS Password",
+            "type": "promptString",
+            "default": "ros",
+        },
+        {
+            "id": "hostname",
+            "description": "rOS Hostname",
+            "type": "promptString",
+            "default": "rOS",
+        },
+    ]
+}
