@@ -20,6 +20,10 @@ echo 'DEFAULT_HOSTNAME' >> /etc/hostname
 # Result should be '127.0.0.1 localhost DEFAULT_HOSTNAME'
 sed -i '1!b;s/$/\ DEFAULT_HOSTNAME/g' /etc/hosts
 
+# Start apache server
+a2ensite rctrl.conf
+service apache2 start
+
 # Start influxdb service
 service influxdb start
 

@@ -107,29 +107,45 @@ build {
             "sudo DEBIAN_FRONTEND=noninteractive apt-get update",
             "sudo DEBIAN_FRONTEND=noninteractive apt-get install -qy ros-galactic-ros-base",
             "sudo echo 'source /opt/ros/galactic/setup.bash' >> /home/ros/.bashrc",
-            # rocketDATA
+            # rosbridge
+            "sudo DEBIAN_FRONTEND=noninteractive apt-get update",
+            "sudo DEBIAN_FRONTEND=noninteractive apt-get install -qy ros-galactic-rosbridge-suite",
+            # rCTRL
+            "sudo DEBIAN_FRONTEND=noninteractive apt-get update",
+            "sudo DEBIAN_FRONTEND=noninteractive apt-get install -qy apache2",
+            "sudo rm -R /var/www/html",
+            "sudo rm /etc/apache2/sites-available/000-default.conf",
+            "sudo mkdir /var/www/rctrl",
+            "sudo chown -R ros /var/www/rctrl",
+            # rDATA
             "sudo DEBIAN_FRONTEND=noninteractive apt-get install -qy wget",
             "sudo wget https://dl.influxdata.com/influxdb/releases/${var.influx_release}",
             "sudo dpkg -i ${var.influx_release}",
             "sudo rm ${var.influx_release}",
-            "sudo mkdir /home/ros/rocketDATA",
-            "sudo mkdir /home/ros/rocketDATA/influx",
-            # rocketGPIO
+            "sudo mkdir /home/ros/rdata",
+            "sudo mkdir /home/ros/rdata/influx",
+            # rGPIO
             "sudo DEBIAN_FRONTEND=noninteractive apt-get install -qy gpiod",
-            "sudo mkdir /home/ros/rocketGPIO",
+            "sudo mkdir /home/ros/rgpio",
         ]
         pause_before = "30s"
     }
     provisioner "file" {
+        # Pull apache config file
+        source = "/build/resources/apache/rctrl.conf"
+        destination = "/etc/apache2/sites-available/rctrl.conf"
+        pause_before = "5s"
+    }
+    provisioner "file" {
         # Pull influx credentials file
         source = "/build/resources/influx/credentials.toml"
-        destination = "/home/ros/rocketDATA/influx/"
+        destination = "/home/ros/rdata/influx/"
         pause_before = "5s"
     }
     provisioner "file" {
         # Pull influx config file
         source = "/build/resources/influx/config.toml"
-        destination = "/home/ros/rocketDATA/influx/"
+        destination = "/home/ros/rdata/influx/"
         pause_before = "5s"
     }
 }
