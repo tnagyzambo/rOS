@@ -127,6 +127,9 @@ build {
             "sudo mkdir /home/${var.user}/rdata/influx",
             # rGPIO
             "sudo DEBIAN_FRONTEND=noninteractive apt-get install -qy gpiod",
+            "sudo groupadd gpiod",
+            "sudo usermod -G gpiod ${var.user}",
+            "sudo echo '# udev rules for gpio port access through libgpiod\nSUBSYSTEM==\"gpio\", KERNEL==\"gpiochip[0-4]\", GROUP=\"gpiod\", MODE=\"0660\"' > /etc/udev/rules.d/60-gpiod.rules",
             "sudo mkdir /home/${var.user}/rgpio",
             # rECU
             "sudo usermod -a -G dialout ${var.user}",
