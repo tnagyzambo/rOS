@@ -89,8 +89,9 @@ build {
             "sudo echo 'iface eth0 inet DHCP' >> /etc/network/interfaces",
             # Start SSH server on boot
             "sudo systemctl enable ssh",
-            # Relpace default hostname with desired hostname in firstboot script
-            "sed -i 's/DEFAULT_HOSTNAME/${var.hostname}/g' /firstboot.sh",
+            # Replace user name and hostname with desired hostname in firstboot script
+            "sed -i 's/HOSTNAME/${var.hostname}/g' /firstboot.sh",
+            "sed -i 's/USERNAME/${var.user}/g' /firstboot.sh",
             # Setup firstboot service
             "sudo chmod +x /firstboot.sh",
             "sudo systemctl enable firstboot.service",
