@@ -155,4 +155,10 @@ build {
         destination = "/home/${var.user}/rdata/influx/"
         pause_before = "5s"
     }
+    provisioner "shell" {
+        inline = [
+             "sudo chown -R ${var.user} /home/${var.user}",
+        ]
+        pause_before = "5s"
+    }
 }
