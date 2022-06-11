@@ -13,37 +13,47 @@ variable "hostname" {
     default = "rOS"
 }
 
+variable "ros2_release" {
+    type    = string
+    default = "humble"
+}
+
 variable "influx_release" {
     type    = string
-    default = "influxdb2-2.0.7-arm64.deb"
+    default = "2.2.0"
+}
+
+variable "influx_cl_release" {
+    type    = string
+    default = "2.3.0"
 }
 
 source "arm" "ubuntu" {
-    file_urls = ["http://cdimage.ubuntu.com/releases/20.04.2/release/ubuntu-20.04.2-preinstalled-server-arm64+raspi.img.xz"]
-    file_checksum_url = "http://cdimage.ubuntu.com/releases/20.04.2/release/SHA256SUMS"
+    file_urls = ["http://cdimage.ubuntu.com/releases/22.04/release/ubuntu-22.04-preinstalled-server-arm64+raspi.img.xz"]
+    file_checksum_url = "http://cdimage.ubuntu.com/releases/22.04/release/SHA256SUMS"
     file_checksum_type = "sha256"
     file_target_extension = "xz"
     file_unarchive_cmd = ["xz", "--decompress", "$ARCHIVE_PATH"]
     image_build_method = "resize"
-    image_path = "rOS-20.04.img"
+    image_path = "rOS-22.04.img"
     image_size = "6G"
     image_type = "dos"
     image_partitions {
         name = "boot"
         type = "c"
-        start_sector = "2048"
-        filesystem = "fat"
-        size = "0"
-        mountpoint = "/boot/firmware"
-    }
+        start_sector = "8192"
+        filesystem = "vfat"
+        size = "256M"
+        mountpoint = "/boot"
+      }
     image_partitions {
         name = "root"
         type = "83"
-        start_sector = "526336"
+        start_sector = "532480"
         filesystem = "ext4"
         size = "0"
         mountpoint = "/"
-    }
+      }
     image_chroot_env = ["PATH=/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin"]
     qemu_binary_source_path = "/usr/bin/qemu-aarch64-static"
     qemu_binary_destination_path = "/usr/bin/qemu-aarch64-static"
@@ -104,13 +114,13 @@ build {
             "sudo DEBIAN_FRONTEND=noninteractive apt-get update",
             "sudo DEBIAN_FRONTEND=noninteractive apt-get install -qy curl gnupg",
             "sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key  -o /usr/share/keyrings/ros-archive-keyring.gpg",
-            "sudo echo 'deb [arch=arm64 signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu focal main' | tee /etc/apt/sources.list.d/ros2.list > /dev/null",
+            "sudo echo 'deb [arch=arm64 signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu jammy main' | tee /etc/apt/sources.list.d/ros2.list > /dev/null",
             "sudo DEBIAN_FRONTEND=noninteractive apt-get update",
-            "sudo DEBIAN_FRONTEND=noninteractive apt-get install -qy ros-galactic-ros-base",
-            "sudo echo 'source /opt/ros/galactic/setup.bash' >> /home/${var.user}/.bashrc",
+            "sudo DEBIAN_FRONTEND=noninteractive apt-get install -qy ros-${var.ros2_release}-ros-base",
+            "sudo echo 'source /opt/ros/${var.ros2_release}/setup.bash' >> /home/${var.user}/.bashrc",
             # rosbridge
             "sudo DEBIAN_FRONTEND=noninteractive apt-get update",
-            "sudo DEBIAN_FRONTEND=noninteractive apt-get install -qy ros-galactic-rosbridge-suite",
+            "sudo DEBIAN_FRONTEND=noninteractive apt-get install -qy ros-${var.ros2_release}-rosbridge-suite",
             # rCTRL
             "sudo DEBIAN_FRONTEND=noninteractive apt-get update",
             "sudo DEBIAN_FRONTEND=noninteractive apt-get install -qy apache2",
@@ -120,20 +130,21 @@ build {
             "sudo chown -R ${var.user} /var/www/rctrl",
             # rDATA
             "sudo DEBIAN_FRONTEND=noninteractive apt-get install -qy wget",
-            "sudo wget https://dl.influxdata.com/influxdb/releases/${var.influx_release}",
-            "sudo dpkg -i ${var.influx_release}",
-            "sudo rm ${var.influx_release}",
+            "sudo wget https://dl.influxdata.com/influxdb/releases/influxdb2-${var.influx_release}-arm64.deb",
+            "sudo dpkg -i influxdb2-${var.influx_release}-arm64.deb",
+            "sudo rm influxdb2-${var.influx_release}-arm64.deb",
+            "sudo wget https://dl.influxdata.com/influxdb/releases/influxdb2-client-${var.influx_cl_release}-linux-arm64.tar.gz",
+            "sudo tar xvzf influxdb2-client-${var.influx_cl_release}-linux-arm64.tar.gz",
+            "sudo cp influxdb2-client-${var.influx_cl_release}-linux-arm64/influx /usr/local/bin/",
+            "sudo rm influxdb2-client-${var.influx_cl_release}-linux-arm64.tar.gz",
+            "sudo rm -r influxdb2-client-${var.influx_cl_release}-linux-arm64",
             "sudo mkdir /home/${var.user}/rdata",
             "sudo mkdir /home/${var.user}/rdata/influx",
             # rGPIO
             "sudo DEBIAN_FRONTEND=noninteractive apt-get install -qy gpiod",
-            "sudo groupadd gpiod",
-            "sudo usermod -G gpiod ${var.user}",
-            "sudo echo '# udev rules for gpio port access through libgpiod\nSUBSYSTEM==\"gpio\", KERNEL==\"gpiochip[0-4]\", GROUP=\"gpiod\", MODE=\"0660\"' > /etc/udev/rules.d/60-gpiod.rules",
-            "sudo mkdir /home/${var.user}/rgpio",
-            # rECU
-            "sudo usermod -a -G dialout ${var.user}",
-            "sudo mkdir /home/${var.user}/recu",
+            "sudo usermod -G dialout ${var.user}",
+            # rI2C
+            "sudo DEBIAN_FRONTEND=noninteractive apt-get install -qy i2c-tools",
         ]
         pause_before = "30s"
     }

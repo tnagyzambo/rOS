@@ -8,7 +8,7 @@ ARG RPI_VERSION
 # REFERENCE: https://www.get-edi.io/Real-Time-Linux-on-the-Raspberry-Pi/
 # REFERENCE: https://www.instructables.com/64bit-RT-Kernel-Compilation-for-Raspberry-Pi-4B-/
 # REFERENCE: https://www.raspberrypi.org/documentation/linux/kernel/building.md#choosing_sources
-FROM ubuntu:20.04 AS base
+FROM ubuntu:22.04 AS base
 USER root
 
 # Get git and wget for pulling sources
@@ -16,17 +16,16 @@ RUN apt-get update
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -qy git \
                                                        wget
 
-# Get rpi 5.4.y kernel, the .y subversion can be seen in the commit history of the
-# Makefile in the repo
-# At the time of writing it is 5.4.83
-RUN git clone --depth=1 --branch=rpi-5.4.y https://github.com/raspberrypi/linux
+# Get rpi 5.15.y kernel, the .y subversion can be seen in the commit history of the Makefile in the repo
+# At the time of writing it is 5.15.45
+RUN git clone --depth=1 --branch=rpi-5.15.y https://github.com/raspberrypi/linux
 
 # Get RT_PREEMPT and patch the kernel
 # You have to match the patch version to the rpi kernel version, there will be a range of
 # versions that will successfully patch, take the highest revision
-# At the time of writing it is 5.4.93-rt51 applied to kernel 5.4.83
-ENV RT_VERSION=5.4.93-rt51
-RUN wget http://cdn.kernel.org/pub/linux/kernel/projects/rt/5.4/older/patch-${RT_VERSION}.patch.gz
+# At the time of writing it is 5.15.44-rt46 applied to kernel 5.15.45
+ENV RT_VERSION=5.15.44-rt46
+RUN wget http://cdn.kernel.org/pub/linux/kernel/projects/rt/5.15/older/patch-${RT_VERSION}.patch.gz
 RUN gunzip patch-${RT_VERSION}.patch.gz
 
 WORKDIR /linux
@@ -116,7 +115,7 @@ RUN mv /*.deb /rt-deb/
 # to allow cross-architecture builds
 #
 # REFERENCE: https://hub.docker.com/r/tonistiigi/binfmt
-FROM tonistiigi/binfmt:qemu-v5.0.1 AS binfmt
+FROM tonistiigi/binfmt:qemu-v6.2.0 AS binfmt
 
 ###########################################################################
 #                           Setup up Packer                               #
@@ -131,7 +130,7 @@ FROM tonistiigi/binfmt:qemu-v5.0.1 AS binfmt
 #
 # REFERENCE: https://github.com/mkaczanowski/packer-builder-arm
 # REFERENCE: https://linuxhit.com/build-a-raspberry-pi-image-packer-packer-builder-arm/
-FROM golang:1.16-buster AS builder
+FROM golang:1.18.3-buster AS builder
 
 RUN apt-get update
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -qy --no-install-recommends ca-certificates \
@@ -147,7 +146,7 @@ RUN go mod download
 RUN go build -o packer-builder-arm
 
 # Get Packer
-ENV PACKER_VERSION 1.7.2
+ENV PACKER_VERSION 1.8.1
 RUN wget https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PACKER_VERSION}_linux_amd64.zip -q -O /tmp/packer.zip
 RUN unzip /tmp/packer.zip -d /bin
 RUN rm /tmp/packer.zip

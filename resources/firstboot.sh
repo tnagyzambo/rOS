@@ -4,7 +4,7 @@
 # This must be done on the physical hardware
 dpkg -i /rt-deb/*.deb
 rm -rf /rt-deb
-flash-kernel --force 5.4.83-rt51-v8-raspi
+flash-kernel --force 5.15.45-rt46-v8-raspi
 
 # Delete default user
 userdel -r ubuntu
@@ -19,6 +19,10 @@ echo 'HOSTNAME' >> /etc/hostname
 # Append new hostname to first line of 'hosts' file
 # Result should be '127.0.0.1 localhost HOSTNAME'
 sed -i '1!b;s/$/\ HOSTNAME/g' /etc/hosts
+
+# Setup i2c
+sudo modprobe i2c-dev
+sudo echo 'i2c-dev' >> /etc/modules
 
 # Start apache server
 a2ensite rctrl.conf
