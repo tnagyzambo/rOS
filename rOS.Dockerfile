@@ -18,8 +18,9 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -qy git \
 
 # Get rpi 5.15.y kernel, the .y subversion can be seen in the commit history of the Makefile in the repo
 # At the time of writing it is 5.15.45
+# updated hashes on 05/10/2022
 RUN git clone --depth=50 --branch=rpi-5.15.y https://github.com/raspberrypi/linux
-RUN cd linux && git reset --hard 207ca688162d4d77129981a8b4352114b97a52b5
+RUN cd linux && git reset --hard 713fa3e4591f65f804bdc88e8648e219fabc9ee1
 RUN cd linux && git clone --depth=1 --branch=rpi-5.15.y https://github.com/raspberrypi/linux driver_hack
 RUN cp /linux/driver_hack/arch/arm64/configs/bcm2711_defconfig /linux/arch/arm64/configs/bcm2711_defconfig
 RUN rm -R /linux/driver_hack
@@ -34,7 +35,8 @@ RUN rm -R /linux/driver_hack
 # You have to match the patch version to the rpi kernel version, there will be a range of
 # versions that will successfully patch, take the highest revision
 # At the time of writing it is 5.15.44-rt46 applied to kernel 5.15.45
-ENV RT_VERSION=5.15.44-rt46
+# Updated to 5.15.71-rt51 on 05/10/2022
+ENV RT_VERSION=5.15.71-rt51
 RUN wget http://cdn.kernel.org/pub/linux/kernel/projects/rt/5.15/older/patch-${RT_VERSION}.patch.gz
 RUN gunzip patch-${RT_VERSION}.patch.gz
 
